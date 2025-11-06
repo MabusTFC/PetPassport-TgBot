@@ -1,5 +1,6 @@
 import asyncio
 import logging
+from xml.etree.ElementInclude import include
 
 from aiogram import Bot, Dispatcher
 from aiohttp import web
@@ -14,8 +15,11 @@ from config import (
     WEB_SERVER_HOST,
     WEB_HOOK_URL
 )
-
-#импорт хендлеров
+from handlers import (
+    auth_handler,
+    add_pet_handler,
+    pets_handler
+)
 
 logging.basicConfig(level=logging.INFO)
 
@@ -25,10 +29,11 @@ async def on_startup(bot: Bot) -> None:
 
 
 async def main():
-    await init_db()
     bot = Bot(token=BOT_TOKEN)
     dp = Dispatcher()
-    #инклуд хендлеров
+    dp.include_router(auth_handler.router)
+    dp.include_router(add_pet_handler.router)
+    dp.include_router(pets_handler.router)
     dp.startup.register(on_startup)
 
     app = web.Application()
