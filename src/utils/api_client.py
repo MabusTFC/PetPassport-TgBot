@@ -8,7 +8,6 @@ from typing import (
     List
 )
 
-
 async def register_owner(telegram_id: int, telegram_nick: Optional[str]) -> Optional[int]:
     async with aiohttp.ClientSession() as session:
         payload = {
@@ -40,11 +39,11 @@ async def get_owner_pets(owner_id: int) -> Optional[List[Dict[str, Any]]]:
             print("Ошибка при получении питомцев:", resp.status)
             return None
 
-async def add_pet(owner_id: int, name: str, type_: str) -> Optional[Dict[str, Any]]:
+async def add_pet(owner_id: int, name: str, breed_: str) -> Optional[Dict[str, Any]]:
     payload = {
         "ownerId": owner_id,
         "name": name,
-        "type": type_
+        "breed": breed_
     }
 
     async with aiohttp.ClientSession() as session:

@@ -2,8 +2,9 @@ from gc import callbacks
 
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, FSInputFile
-from starlette.routing import Router
+from aiogram import Router
 
+from src.keyboard.keyboard import get_pets_list_keyboard
 
 router = Router()
 
@@ -15,7 +16,7 @@ async def pets_list(callback_query: CallbackQuery, state = FSMContext):
     pets = owner.get("pets",[])
 
     if not pets:
-        await callback_query.answer("No pets")
+        await callback_query.answer("У вас пока нет питомцев!")
         return
     elif len(pets) == 1:
         await callback_query.answer(f"You have {len(pets)} pets")
@@ -23,7 +24,7 @@ async def pets_list(callback_query: CallbackQuery, state = FSMContext):
 
         await callback_query.answer_photo(
             photo=FSInputFile("img/zaglushka.jpg"),
-            caption="",
+            caption="📋 Выбери питомца:",
             parse_mode="Markdown",
-            reply_markup=await get_greetings_keyboard(),
+            reply_markup=await get_pets_list_keyboard(pets),
         )

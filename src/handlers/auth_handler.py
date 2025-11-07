@@ -4,10 +4,10 @@ from aiogram.fsm.context import FSMContext
 from aiogram.filters import Command
 from aiogram.types import FSInputFile
 
-from utils.answer import GREETING_MESSAGE
-from utils.api_client import register_owner
+from src.utils.answer import GREETING_MESSAGE
+from src.utils.api_client import register_owner
 
-from keyboards.keyboard import get_greetings_keyboard
+from src.keyboard.keyboard import get_greeting_keyboard
 
 
 router = Router()
@@ -32,5 +32,5 @@ async def auth_handler(message: types.Message, state: FSMContext):
             photo=FSInputFile("img/zaglushka.jpg"),
             caption=GREETING_MESSAGE.format(user_name=user_name),
             parse_mode="Markdown",
-            reply_markup=await get_greetings_keyboard(),
+            reply_markup=await get_greeting_keyboard(),
         )
