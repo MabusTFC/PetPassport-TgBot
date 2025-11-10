@@ -5,7 +5,8 @@ from config import BOT_TOKEN
 from handlers import (
     auth_handler,
     add_pet_handler,
-    pets_handler
+    pets_handler,
+    settings_my_pet_handler,
 )
 
 async def main():
@@ -15,7 +16,7 @@ async def main():
     dp.include_router(auth_handler.router)
     dp.include_router(add_pet_handler.router)
     dp.include_router(pets_handler.router)
-
+    dp.include_router(settings_my_pet_handler.router)
     await dp.start_polling(bot)
 
 

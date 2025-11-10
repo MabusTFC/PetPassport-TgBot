@@ -5,7 +5,7 @@ from aiogram.filters import Command
 from aiogram.types import FSInputFile
 
 from src.utils.answer import GREETING_MESSAGE
-from src.utils.api_client import register_owner
+from src.utils.api_client import register_owner, get_owner_by_telegram
 
 from src.keyboard.keyboard import get_greeting_keyboard
 
@@ -20,13 +20,15 @@ async def auth_handler(message: types.Message, state: FSMContext):
     tg_id = message.from_user.id
     tg_name = message.from_user.username
 
-    owner_id = await register_owner(tg_id, tg_name)
+    owner_id = await get_owner_by_telegram(tg_id)
+    if not owner_id:
+        owner_id = await register_owner(tg_id, tg_name)
     await state.update_data(owner_id=owner_id, tg_id=tg_id)
-
 
     if not owner_id:
         await message.answer("Error")
         return
+
     else:
         await message.answer_photo(
             photo=FSInputFile("img/zaglushka.jpg"),
