@@ -31,7 +31,7 @@ async def auth_handler(message: types.Message, state: FSMContext):
 
     else:
         await message.answer_photo(
-            photo=FSInputFile("img/zaglushka.jpg"),
+            photo=FSInputFile("img/welcome.jpg"),
             caption=GREETING_MESSAGE.format(user_name=user_name),
             parse_mode="Markdown",
             reply_markup=await get_greeting_keyboard(),

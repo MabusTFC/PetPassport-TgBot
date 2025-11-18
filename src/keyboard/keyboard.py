@@ -29,9 +29,9 @@ async def get_my_pet_keyboard(pet_id : int) -> InlineKeyboardMarkup:
 async def get_settings_pet_keyboard(pet_id: int) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=
     [
-        [InlineKeyboardButton(text="Имя", callback_data=f"edit_field_name_{pet_id}")],
-        [InlineKeyboardButton(text="Порода", callback_data=f"edit_field_breed_{pet_id}")],
-        [InlineKeyboardButton(text="Вес", callback_data=f"edit_field_weight_{pet_id}")],
-        [InlineKeyboardButton(text="Дата рождения", callback_data=f"edit_field_birth_date_{pet_id}")],
-        [InlineKeyboardButton(text="Фото", callback_data=f"edit_field_photo_{pet_id}")],
+        [InlineKeyboardButton(text="🐾 Имя", callback_data=f"edit_field_name_{pet_id}")],
+        [InlineKeyboardButton(text="🐶 Порода", callback_data=f"edit_field_breed_{pet_id}")],
+        [InlineKeyboardButton(text="⚖️ Вес", callback_data=f"edit_field_weight_{pet_id}")],
+        [InlineKeyboardButton(text="📅 Дата рождения", callback_data=f"edit_field_birth_{pet_id}")],
+        [InlineKeyboardButton(text="🖼️ Фото", callback_data=f"edit_field_photo_{pet_id}")],
     ])

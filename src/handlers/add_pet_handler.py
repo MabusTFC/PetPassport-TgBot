@@ -16,7 +16,7 @@ async def add_pet_handler(callback_query: types.CallbackQuery, state: FSMContext
         return
 
     await state.update_data(owner_id=owner_id)
-    await callback_query.message.answer("Введите имя питомца:")
+    await callback_query.message.answer("🐕 Введите имя питомца:")
     await state.set_state(AddPetStates.waiting_for_name)
 
 @router.message(AddPetStates.waiting_for_name)

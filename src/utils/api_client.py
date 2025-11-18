@@ -1,5 +1,3 @@
-import ssl
-
 import aiohttp
 
 
@@ -24,10 +22,8 @@ async def register_owner(telegram_id: int, telegram_nick: Optional[str]) -> Opti
                 data = await resp.json()
                 print("Ответ JSON:", data)
 
-                # если сервер вернул просто число — сразу возвращаем
                 if isinstance(data, int):
                     return data
-                # если вернул объект — достаем id
                 return data.get("id")
             else:
                 print("Ошибка регистрации:", resp.status, await resp.text())
@@ -61,7 +57,7 @@ async def add_pet(owner_id: int, name: str, breed: str):
     async with aiohttp.ClientSession() as session:
         async with session.post(f"{BASE_URL}/api/Pets", json=payload) as resp:
             print(f"Ответ сервера: {resp.status}")
-            if resp.status in (200, 201):  # иногда backend возвращает 201 Created
+            if resp.status in (200, 201):
                 return await resp.json()
             else:
                 text = await resp.text()
@@ -94,3 +90,62 @@ async def update_pet(pet_id: int,
                 return True
             print("Ошибка при обновлении питомца:", resp.status)
             return False
+
+
+async def get_pet_info(pet_id: int) -> Optional[Dict[str, Any]]:
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f"{BASE_URL}/api/Pets/{pet_id}") as resp:
+            if resp.status == 200:
+                data = await resp.json()
+                print(f"DEBUG: Raw API response: {data}")
+
+                normalized_data = {}
+
+                for key, value in data.items():
+                    if key == 'weight8':
+                        normalized_data['weightKg'] = value
+                    elif key == 'birthday':
+                        normalized_data['birthDate'] = value
+                    elif key == 'parent8':
+                        normalized_data['ownerId'] = value
+                    else:
+                        normalized_data[key] = value
+
+                if 'photos' not in normalized_data:
+                    normalized_data['photos'] = []
+
+                print(f"DEBUG: Normalized data: {normalized_data}")
+                return normalized_data
+
+            print(f"Ошибка при получении питомца {pet_id}:", resp.status)
+            return None
+
+
+async def update_pet_photo(pet_id: int, photo_bytes: bytes) -> bool:
+    try:
+        import aiohttp
+        import io
+
+
+        form_data = aiohttp.FormData()
+        form_data.add_field('file',
+                            io.BytesIO(photo_bytes),
+                            filename=f'pet_{pet_id}.jpg',
+                            content_type='image/jpeg')
+
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                    f"{BASE_URL}/api/Pets/{pet_id}/upload",
+                    data=form_data,
+                    ssl=False
+            ) as response:
+                if response.status == 200:
+                    print("✅ Фото успешно загружено на бекенд")
+                    return True
+                else:
+                    print(f"❌ Ошибка загрузки фото: {response.status}")
+                    return False
+
+    except Exception as e:
+        print(f"❌ Исключение при загрузке фото: {e}")
+        return False
