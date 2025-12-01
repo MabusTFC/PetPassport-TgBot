@@ -25,7 +25,12 @@ async def get_pets_list_keyboard(pets: list[dict]) -> InlineKeyboardMarkup:
 async def get_my_pet_keyboard(pet_id : int) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=
     [
-        [InlineKeyboardButton(text="Паспорт питомца 📕", url=SERVER_URL+pet_id)],
+        # Формируем ссылку на паспорт питомца.
+        # Добавляем разделяющий слэш, чтобы порт и id не слипались (7205 -> 7205/3, а не 72053).
+        [InlineKeyboardButton(
+            text="Паспорт питомца 📕",
+            url=f"{SERVER_URL.rstrip('/')}/?id={pet_id}"
+        )],
         [InlineKeyboardButton(text="Редактировать информацию о питомце 🐶", callback_data=f"settings_my_pet_{pet_id}")],
         [InlineKeyboardButton(text="Посмотреть питомца(-ев) 🐱", callback_data="pets_list")],
     ])

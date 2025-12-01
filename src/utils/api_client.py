@@ -16,7 +16,8 @@ async def register_owner(telegram_id: int, telegram_nick: Optional[str]) -> Opti
         "telegramNick": telegram_nick or "Unknown"
     }
 
-    async with aiohttp.ClientSession() as session:
+    # Отключаем проверку SSL-сертификата для локального https (self-signed)
+    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
         async with session.post(f"{BASE_URL}/api/Owners/register", json=payload) as resp:
             print("Ответ сервера при регистрации владельца:", resp.status)
             if resp.status in (200, 201):
@@ -32,7 +33,7 @@ async def register_owner(telegram_id: int, telegram_nick: Optional[str]) -> Opti
 
 
 async def get_owner_by_telegram(telegram_id: int) -> Optional[Dict[str, Any]]:
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
         async with session.get(f"{BASE_URL}/api/Owners/by-telegram/{telegram_id}") as resp:
             if resp.status == 200:
                 return await resp.json()
@@ -41,7 +42,7 @@ async def get_owner_by_telegram(telegram_id: int) -> Optional[Dict[str, Any]]:
 
 
 async def get_owner_pets(owner_id: int) -> Optional[List[Dict[str, Any]]]:
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
         async with session.get(f"{BASE_URL}/api/Owners/{owner_id}/pets") as resp:
             if resp.status == 200:
                 return await resp.json()
@@ -55,7 +56,7 @@ async def add_pet(owner_id: int, name: str, breed: str):
         "ownerId": int(owner_id)
     }
 
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
         async with session.post(f"{BASE_URL}/api/Pets", json=payload) as resp:
             print(f"Ответ сервера: {resp.status}")
             if resp.status in (200, 201):
@@ -85,7 +86,7 @@ async def update_pet(pet_id: int,
     if not payload:
         return False
 
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
         async with session.put(f"{BASE_URL}/api/Pets/{pet_id}", json=payload) as resp:
             if resp.status == 200:
                 return True
@@ -93,7 +94,7 @@ async def update_pet(pet_id: int,
             return False
 
 async def get_pet_info(pet_id: int) -> Optional[Dict[str, Any]]:
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
         async with session.get(f"{BASE_URL}/api/Pets/{pet_id}") as resp:
             if resp.status == 200:
                 data = await resp.json()
