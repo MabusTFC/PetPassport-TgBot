@@ -1,8 +1,5 @@
-import aiohttp
-import os
 import glob
 import time
-
 
 from src.config import BASE_URL
 
@@ -15,7 +12,6 @@ TEMP_PHOTO_DIR = BASE_DIR / "temp_photo"
 IMG_DIR = BASE_DIR / "src" / "img"
 
 TEMP_PHOTO_DIR.mkdir(exist_ok=True)
-
 
 async def download_pet_photo(pet_id: int, photo_url: str) -> str:
     try:

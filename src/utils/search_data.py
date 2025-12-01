@@ -3,7 +3,6 @@ from src.utils.api_client import (
     get_owner_pets,
 )
 
-
 async def get_pet_data(user_id: int, pet_id: int = None):
     owner_data = await get_owner_by_telegram(user_id)
     if not owner_data:

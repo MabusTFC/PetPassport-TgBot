@@ -1,4 +1,3 @@
-
 from aiogram import types, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import Command
@@ -8,7 +7,6 @@ from src.utils.answer import GREETING_MESSAGE
 from src.utils.api_client import register_owner, get_owner_by_telegram
 
 from src.keyboard.keyboard import get_greeting_keyboard
-
 
 router = Router()
 

@@ -1,5 +1,6 @@
-import aiohttp
+from datetime import datetime
 
+import aiohttp
 
 from src.config import BASE_URL
 from typing import (
@@ -91,7 +92,6 @@ async def update_pet(pet_id: int,
             print("Ошибка при обновлении питомца:", resp.status)
             return False
 
-
 async def get_pet_info(pet_id: int) -> Optional[Dict[str, Any]]:
     async with aiohttp.ClientSession() as session:
         async with session.get(f"{BASE_URL}/api/Pets/{pet_id}") as resp:
@@ -126,7 +126,6 @@ async def update_pet_photo(pet_id: int, photo_bytes: bytes) -> bool:
         import aiohttp
         import io
 
-
         form_data = aiohttp.FormData()
         form_data.add_field('file',
                             io.BytesIO(photo_bytes),
@@ -149,3 +148,33 @@ async def update_pet_photo(pet_id: int, photo_bytes: bytes) -> bool:
     except Exception as e:
         print(f"❌ Исключение при загрузке фото: {e}")
         return False
+
+
+async def send_message_to_bot(telegram_id:int, pet_name:str, event_title: str, event_type:str, custom_data: dict = None):
+
+    payload = {
+        "telegram_id": telegram_id,
+        "pet_name": pet_name,
+        "event_type": event_type,
+        "event_title": event_title,
+        "event_date": datetime
+    }
+
+    if custom_data:
+        payload.update(custom_data)
+
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                    'http://localhost:8080/message',
+                    json=payload,
+                    headers={'Content-Type': 'application/json'}
+            ) as resp:
+                response_data = await resp.json()
+                print(f"✅ Статус: {resp.status}")
+                print(f"✅ Ответ: {response_data}")
+                return response_data
+
+    except Exception as e:
+        print(f"❌ Ошибка: {e}")
+        return None

@@ -8,7 +8,6 @@ from src.utils.api_client import update_pet, update_pet_photo
 
 router = Router()
 
-
 pending_edits: dict[int, dict] = {}
 
 @router.callback_query(lambda c: c.data.startswith("settings_my_pet_"))
